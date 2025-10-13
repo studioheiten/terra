@@ -17,10 +17,11 @@
   --color-separator-non-opaque: rgba(0, 0, 0, 0.12);
 
   /* Color styles */
+  --color-accent: #f64e60;
   --color-blue: #2559f4;
   --color-green: #05d182;
   --color-orange: #f5993d;
-  --color-pink: #f5993d;
+  --color-pink: #f64e60;
   --color-purple: #923ade;
   --color-red: #ec5151;
 
