@@ -1,26 +1,87 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Monochromes */
+  --color-label-primary: #000000;
+  --color-label-secondary: #888888;
+  --color-label-tertiary: rgba(136, 136, 136, 0.6);
+
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f2f2f7;
+
+  --color-fill-primary: rgba(120, 120, 120, 0.2);
+  --color-fill-secondary: rgba(120, 120, 128, 0.16);
+  --color-fill-tertiary: rgba(118, 118, 128, 0.12);
+
+  --color-separator-opaque: #d4d4d4;
+  --color-separator-non-opaque: rgba(0, 0, 0, 0.12);
+
+  /* Color styles */
+  --color-blue: #2559f4;
+  --color-green: #05d182;
+  --color-orange: #f5993d;
+  --color-pink: #f5993d;
+  --color-purple: #923ade;
+  --color-red: #ec5151;
+
+  /* Text styles */
+  --font-sans: "Geist", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+
+  --text-h1: 2rem; /* 26px */
+  --text-h1--line-height: 100%;
+  --text-h1--letter-spacing: -0.05rem;
+  --text-h1--font-weight: 400;
+
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 100%;
+  --text-h2--letter-spacing: -0.0375rem;
+  --text-h2--font-weight: 400;
+
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 100%;
+  --text-h3--letter-spacing: -0.03125rem;
+  --text-h3--font-weight: 400;
+
+  --text-label: 1rem;
+  --text-label--line-height: normal;
+  --text-label--letter-spacing: -0.025rem;
+  --text-label--font-weight: 500;
+
+  --text-body: 1rem;
+  --text-body--line-height: 150%;
+  --text-body--letter-spacing: 0;
+  --text-body--font-weight: 400;
+
+  --text-body-small: 0.75rem;
+  --text-body-small--line-height: 150%;
+  --text-body-small--letter-spacing: 0;
+  --text-body-small--font-weight: 400;
+
+  --text-footnote: 0.625rem;
+  --text-footnote--line-height: 150%;
+  --text-footnote--letter-spacing: 0;
+  --text-footnote--font-weight: 400;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-emphasised: 600;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-label-primary: #ffffff;
+      --color-label-secondary: #666;
+      --color-label-tertiary: #3636;
+      --color-bg-primary: #000000;
+      --color-bg-secondary: #111;
+      --color-fill-primary: rgba(120, 120, 129, 0.36);
+      --color-fill-secondary: rgba(120, 120, 129, 0.32);
+      --color-fill-tertiary: rgba(118, 118, 129, 0.24);
+      --color-separator-opaque: #38383a;
+      --color-separator-non-opaque: rgba(255, 255, 255, 0.17);
+    }
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
