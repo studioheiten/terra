@@ -20,3 +20,5 @@ The Terra Team
    2. verifyCode(email, code)
 
 4. Use these two functions in the UI under /login/page.tsx to make the authentication operational. Do not redirect after this; just have this part finished, and we'll take it from there.
+
+NOTE: Use Context7 MCP for the latest docs on Node Mailer and better-auth.

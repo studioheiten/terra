@@ -5,15 +5,51 @@ import { useLoginStore } from "./store";
 import { ProgressView } from "@/app/components/misc/ProgressView";
 import { AnimatePresence } from "motion/react";
 import { BlurReplace } from "@/app/components/animations/BlurReplace";
+import { requestVerificationCode, verifyCode } from "./lib";
 
 export default function LoginPage() {
   // State
   const store = useLoginStore();
 
   // Functions
-  const onSubmitEmail = async (email: string) => {};
+  const onSubmitEmail = async (email: string) => {
+    store.setIsLoading(true);
+    try {
+      const result = await requestVerificationCode(email);
+      if (result.success) {
+        store.setEmail(email);
+        store.setStage("VERIFICATION_CODE");
+      } else {
+        console.error("Failed to send verification code:", result.error);
+        // TODO: Show error message to user
+      }
+    } catch (error) {
+      console.error("Error requesting verification code:", error);
+      // TODO: Show error message to user
+    } finally {
+      store.setIsLoading(false);
+    }
+  };
 
-  const onSubmitVerificationCode = async (code: string) => {};
+  const onSubmitVerificationCode = async (code: string) => {
+    store.setIsLoading(true);
+    try {
+      const result = await verifyCode(store.email, code);
+      if (result.success) {
+        // Authentication successful
+        console.log("Login successful:", result.user);
+        // TODO: Redirect to dashboard or handle successful login
+      } else {
+        console.error("Failed to verify code:", result.error);
+        // TODO: Show error message to user
+      }
+    } catch (error) {
+      console.error("Error verifying code:", error);
+      // TODO: Show error message to user
+    } finally {
+      store.setIsLoading(false);
+    }
+  };
 
   // View
   return (
@@ -68,6 +104,7 @@ function EmailInput({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    onSubmit(email);
   };
 
   return (
@@ -110,6 +147,7 @@ function VerificationCodeInput({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    onSubmit(verificationCode);
   };
 
   return (
