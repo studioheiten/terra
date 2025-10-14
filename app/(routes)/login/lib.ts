@@ -1,14 +1,8 @@
-"use server";
+"use client";
 
-import { createAuthClient } from "better-auth/client";
-import { emailOTPClient } from "better-auth/client/plugins";
+import { authClient } from "@/app/lib/account/auth-client";
 
-const authClient = createAuthClient({
-  baseURL: process.env.BETTER_AUTH_URL!,
-  plugins: [emailOTPClient()],
-});
-
-export const requestVerificationCode = async (email: string) => {
+const requestVerificationCode = async (email: string) => {
   try {
     await authClient.emailOtp.sendVerificationOtp({
       email,
@@ -25,7 +19,7 @@ export const requestVerificationCode = async (email: string) => {
   }
 };
 
-export const verifyCode = async (email: string, code: string) => {
+const verifyCode = async (email: string, code: string) => {
   try {
     const response = await authClient.signIn.emailOtp({
       email,
@@ -44,4 +38,9 @@ export const verifyCode = async (email: string, code: string) => {
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }
+};
+
+export const LoginFunctions = {
+  requestVerificationCode,
+  verifyCode,
 };
