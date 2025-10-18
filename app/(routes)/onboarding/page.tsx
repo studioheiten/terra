@@ -3,7 +3,6 @@
 import { Organization } from "@prisma/client";
 import { withAuth } from "@workos-inc/authkit-nextjs";
 import OnboardingView from "./view";
-import prisma from "@/packages/prisma";
 import Image from "next/image";
 
 export type PageProps = {
