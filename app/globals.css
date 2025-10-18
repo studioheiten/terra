@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+html {
+  background-color: var(--color-bg-primary);
+  @apply text-label-primary;
+}
+
 @theme {
   /* Monochromes */
   --color-label-primary: #000000;
