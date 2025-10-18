@@ -1,16 +1,14 @@
-"use client";
-
 import clsx from "clsx";
-import { useState } from "react";
 import { ProgressView } from "../misc/ProgressView";
 import { AnimatePresence } from "motion/react";
 import { BlurReplace } from "../animations/BlurReplace";
 
 type Props = {
   children: React.ReactNode;
-  onClick: Promise<void>;
-  disabled: boolean;
-  size: "small" | "large";
+  onClick: () => Promise<void>;
+  disabled?: boolean;
+  loading?: boolean;
+  size?: "small" | "large";
   className?: string;
 };
 
@@ -18,14 +16,12 @@ export function Button({
   children,
   onClick,
   disabled = false,
+  loading = false,
+  size = "large",
   className,
 }: Props) {
-  const [loading, setLoading] = useState(false);
-
   const handleButtonPress = async () => {
-    setLoading(true);
-    await onClick;
-    setLoading(false);
+    await onClick();
   };
 
   return (
@@ -36,8 +32,10 @@ export function Button({
           "cursor-pointer": !disabled && !loading,
           "cursor-wait": loading,
           "cursor-not-allowed": disabled && !loading,
+          "h-[2.75rem]": size === "large",
+          "h-8": size === "small",
         },
-        className
+        className,
       )}
       onClick={handleButtonPress}
       disabled={disabled || loading}

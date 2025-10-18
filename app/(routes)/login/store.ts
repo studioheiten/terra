@@ -20,7 +20,11 @@ const useLoginStore = create<LoginStoreState & Actions>((set) => ({
   isLoading: false,
   stage: "EMAIL",
   setEmail: (email) => set({ email }),
-  setVerificationCode: (code) => set({ verificationCode: code }),
+  setVerificationCode: (code) => {
+    if (/^\d{6}$/.test(code)) {
+      set({ verificationCode: code });
+    }
+  },
   setIsLoading: (isLoading) => set({ isLoading }),
   setStage: (stage) => set({ stage }),
 }));
