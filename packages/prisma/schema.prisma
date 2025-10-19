@@ -21,10 +21,17 @@ model User {
   joinedAt DateTime @default(now())
 }
 
+enum OrganizationTier {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
 model Organization {
-  id        String   @id
+  id        String           @id
   name      String
-  slug      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  slug      String           @unique
+  tier      OrganizationTier @default(FREE)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
 }

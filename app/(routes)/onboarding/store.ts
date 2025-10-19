@@ -5,6 +5,7 @@ type OnboardingStoreState = {
   name: string;
   orgName: string;
   orgSlug: string;
+  orgId: string;
   teamEmailsList: string;
   slugManuallySet: boolean;
   randomSuffix: string;
@@ -16,6 +17,7 @@ type Actions = {
   setName: (name: string) => void;
   setOrgName: (orgName: string) => void;
   setOrgSlug: (orgSlug: string) => void;
+  setOrgId: (orgId: string) => void;
   setTeamEmailsList: (teamEmailsList: string) => void;
   setSlugManuallySet: (slugManuallySet: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
@@ -30,6 +32,7 @@ const useOnboardingStore = create<OnboardingStoreState & Actions>(
       name: "",
       orgName: "",
       orgSlug: "",
+      orgId: "",
       teamEmailsList: "",
       slugManuallySet: false,
       randomSuffix,
@@ -52,6 +55,7 @@ const useOnboardingStore = create<OnboardingStoreState & Actions>(
       setOrgSlug: (orgSlug) => {
         set({ orgSlug, slugManuallySet: true });
       },
+      setOrgId: (orgId) => set({ orgId }),
       setTeamEmailsList: (teamEmailsList) => set({ teamEmailsList }),
       setSlugManuallySet: (slugManuallySet) => set({ slugManuallySet }),
       setIsLoading: (isLoading) => set({ isLoading }),

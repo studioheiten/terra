@@ -7,6 +7,9 @@ import OnboardingProgressView from "./components/ProgressView";
 import TextField from "@/components/primitives/TextField";
 import { ProgressView } from "@/components/misc/ProgressView";
 import { checkOrgSlugExists } from "./lib";
+import { toast } from "sonner";
+import clsx from "clsx";
+import { createOrganization } from "@/lib/org/create-org";
 
 export default function OnboardingView() {
   const {
@@ -19,6 +22,7 @@ export default function OnboardingView() {
     slugManuallySet,
     isLoading,
     setIsLoading,
+    setOrgId,
   } = useOnboardingStore();
 
   const title = useMemo(() => {
@@ -88,14 +92,37 @@ export default function OnboardingView() {
     }
 
     if (stage === "CREATE_ORG") {
+      setIsLoading(true);
+
       // Check if the slug is already taken
       const slugTaken = await checkOrgSlugExists(orgSlug.trim());
+
+      if (slugTaken) {
+        setIsLoading(false);
+        toast.error("This slug is already taken. Try something else!");
+        return;
+      }
+
+      const { id } = await createOrganization({
+        name: orgName.trim(),
+        slug: orgSlug.trim(),
+      });
+
+      setOrgId(id);
+      setStage("INVITE_TEAM");
     }
   };
 
   return (
     <div className="flex-1 flex items-center justify-center">
-      <div className="w-[28rem] max-w-[90%] flex flex-col gap-6 items-stretch justify-center">
+      <div
+        className={clsx(
+          "w-[28rem] max-w-[90%] flex flex-col gap-6 items-stretch justify-center",
+          {
+            "pointer-events-none": isLoading,
+          }
+        )}
+      >
         <div className="flex items-center justify-center">
           <img src="/terra-logo.svg" className="w-8 h-8" />
         </div>
