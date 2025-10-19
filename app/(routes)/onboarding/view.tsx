@@ -14,7 +14,6 @@ import {
 } from "./lib";
 import { toast } from "sonner";
 import { createOrganization } from "@/lib/org/create-org";
-import { inviteEmailsToOrganization } from "@/lib/org/invite-to-org";
 
 export default function OnboardingView() {
   const {
@@ -26,12 +25,9 @@ export default function OnboardingView() {
     setLastName,
     orgName,
     orgSlug,
-    orgId,
     slugManuallySet,
     isLoading,
     setIsLoading,
-    setOrgId,
-    emailValidation,
   } = useOnboardingStore();
 
   const title = useMemo(() => {
@@ -40,8 +36,6 @@ export default function OnboardingView() {
         return "Welcome to Terra.";
       case "CREATE_ORG":
         return `Hi there, ${firstName}!`;
-      case "INVITE_TEAM":
-        return "Bring the rest of the team";
     }
   }, [stage, firstName]);
 
@@ -51,16 +45,11 @@ export default function OnboardingView() {
         return "Let's get you started with your account and workspace.";
       case "CREATE_ORG":
         return "Let's create your workspace.";
-      case "INVITE_TEAM":
-        return "Terra is about the friends you made along the way";
     }
   }, [stage]);
 
   const buttonText = useMemo(() => {
-    if (stage === "INVITE_TEAM") {
-      return "Finish ";
-    }
-    return "Next";
+    return stage === "CREATE_ORG" ? "Finish" : "Next";
   }, [stage]);
 
   const buttonEnabled = useMemo(() => {
@@ -88,21 +77,10 @@ export default function OnboardingView() {
           orgSlug.trim().length <= slugMaxLength;
 
         return orgNameValid && orgSlugValid;
-      case "INVITE_TEAM":
-        // Emails are valid if validation passes
-        return emailValidation.isValid;
       default:
         return false;
     }
-  }, [
-    stage,
-    firstName,
-    lastName,
-    orgName,
-    orgSlug,
-    slugManuallySet,
-    emailValidation,
-  ]);
+  }, [stage, firstName, lastName, orgName, orgSlug, slugManuallySet]);
 
   const onClick = async () => {
     if (!buttonEnabled || isLoading) return;
@@ -121,7 +99,7 @@ export default function OnboardingView() {
       return;
     }
 
-    // In the CREATE_ORG stage, create the organization and move to INVITE_TEAM
+    // In the CREATE_ORG stage, create the organization and reauthenticate
     if (stage === "CREATE_ORG") {
       setIsLoading(true);
 
@@ -134,25 +112,10 @@ export default function OnboardingView() {
         return;
       }
 
-      const { id } = await createOrganization({
+      await createOrganization({
         name: orgName.trim(),
         slug: orgSlug.trim(),
       });
-
-      setOrgId(id);
-      setStage("INVITE_TEAM");
-      return;
-    }
-
-    if (stage === "INVITE_TEAM") {
-      setIsLoading(true);
-
-      if (emailValidation.validEmails.length > 0) {
-        await inviteEmailsToOrganization({
-          organizationId: orgId,
-          emails: emailValidation.validEmails,
-        });
-      }
 
       await reauthenticateUser(); // Will cause a page reload; no need to redirect
     }
@@ -181,7 +144,6 @@ export default function OnboardingView() {
 
         {stage === "NAME" && <NameInput />}
         {stage === "CREATE_ORG" && <OrgCreate />}
-        {stage === "INVITE_TEAM" && <InviteTeam />}
 
         <Button onClick={onClick} disabled={!buttonEnabled}>
           {isLoading ? <ProgressView /> : buttonText}
@@ -229,22 +191,6 @@ function OrgCreate() {
         placeholder="greendale"
         prefix="https://app.buildwithterra.com/"
         title="Organization Slug"
-      />
-    </div>
-  );
-}
-
-function InviteTeam() {
-  const { teamEmailsList, setTeamEmailsList, emailValidation } =
-    useOnboardingStore();
-
-  return (
-    <div className="flex flex-col gap-2">
-      <TextField
-        value={teamEmailsList}
-        onChange={setTeamEmailsList}
-        placeholder="Emails, separated by commas"
-        title="Invite your team"
       />
     </div>
   );

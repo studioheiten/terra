@@ -8,19 +8,14 @@ export default function OnboardingProgressView() {
 
   const isNameStage = stage === "NAME";
   const isCreateOrgStage = stage === "CREATE_ORG";
-  const isInviteTeamStage = stage === "INVITE_TEAM";
 
   return (
     <div className="flex flex-row gap-1 items-center justify-center">
       <Dot active={true} />
 
-      <Line active={isCreateOrgStage || isInviteTeamStage} />
+      <Line active={isCreateOrgStage} />
 
-      <Dot active={isCreateOrgStage || isInviteTeamStage} />
-
-      <Line active={isInviteTeamStage} />
-
-      <Dot active={isInviteTeamStage} />
+      <Dot active={isCreateOrgStage} />
     </div>
   );
 }

@@ -1,54 +1,14 @@
 import { create } from "zustand";
 
-// Email validation function
-function validateEmails(emailsString: string): {
-  isValid: boolean;
-  validEmails: string[];
-  invalidEmails: string[];
-} {
-  if (!emailsString.trim()) {
-    return { isValid: true, validEmails: [], invalidEmails: [] }; // Empty input is valid
-  }
-
-  // Split by comma, with optional spaces after commas
-  const emails = emailsString.split(/,\s*/);
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const validEmails: string[] = [];
-  const invalidEmails: string[] = [];
-
-  emails.forEach((email) => {
-    if (email) {
-      if (emailRegex.test(email)) {
-        validEmails.push(email);
-      } else {
-        invalidEmails.push(email);
-      }
-    }
-  });
-
-  return {
-    isValid: invalidEmails.length === 0,
-    validEmails,
-    invalidEmails,
-  };
-}
-
 type OnboardingStoreState = {
-  stage: "NAME" | "CREATE_ORG" | "INVITE_TEAM";
+  stage: "NAME" | "CREATE_ORG";
   firstName: string;
   lastName: string;
   orgName: string;
   orgSlug: string;
-  orgId: string;
-  teamEmailsList: string;
   slugManuallySet: boolean;
   randomSuffix: string;
   isLoading: boolean;
-  emailValidation: {
-    isValid: boolean;
-    validEmails: string[];
-    invalidEmails: string[];
-  };
 };
 
 type Actions = {
@@ -57,8 +17,6 @@ type Actions = {
   setLastName: (lastName: string) => void;
   setOrgName: (orgName: string) => void;
   setOrgSlug: (orgSlug: string) => void;
-  setOrgId: (orgId: string) => void;
-  setTeamEmailsList: (teamEmailsList: string) => void;
   setSlugManuallySet: (slugManuallySet: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
 };
@@ -73,12 +31,9 @@ const useOnboardingStore = create<OnboardingStoreState & Actions>(
       lastName: "",
       orgName: "",
       orgSlug: "",
-      orgId: "",
-      teamEmailsList: "",
       slugManuallySet: false,
       randomSuffix,
       isLoading: false,
-      emailValidation: { isValid: true, validEmails: [], invalidEmails: [] },
       setStage: (stage) => set({ stage }),
       setFirstName: (firstName) => set({ firstName }),
       setLastName: (lastName) => set({ lastName }),
@@ -97,11 +52,6 @@ const useOnboardingStore = create<OnboardingStoreState & Actions>(
       },
       setOrgSlug: (orgSlug) => {
         set({ orgSlug, slugManuallySet: true });
-      },
-      setOrgId: (orgId) => set({ orgId }),
-      setTeamEmailsList: (teamEmailsList) => {
-        const emailValidation = validateEmails(teamEmailsList);
-        set({ teamEmailsList, emailValidation });
       },
       setSlugManuallySet: (slugManuallySet) => set({ slugManuallySet }),
       setIsLoading: (isLoading) => set({ isLoading }),
