@@ -1,5 +1,38 @@
 import { create } from "zustand";
 
+// Email validation function
+function validateEmails(emailsString: string): {
+  isValid: boolean;
+  validEmails: string[];
+  invalidEmails: string[];
+} {
+  if (!emailsString.trim()) {
+    return { isValid: true, validEmails: [], invalidEmails: [] }; // Empty input is valid
+  }
+
+  // Split by comma, with optional spaces after commas
+  const emails = emailsString.split(/,\s*/);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validEmails: string[] = [];
+  const invalidEmails: string[] = [];
+
+  emails.forEach((email) => {
+    if (email) {
+      if (emailRegex.test(email)) {
+        validEmails.push(email);
+      } else {
+        invalidEmails.push(email);
+      }
+    }
+  });
+
+  return {
+    isValid: invalidEmails.length === 0,
+    validEmails,
+    invalidEmails,
+  };
+}
+
 type OnboardingStoreState = {
   stage: "NAME" | "CREATE_ORG" | "INVITE_TEAM";
   name: string;
@@ -10,6 +43,11 @@ type OnboardingStoreState = {
   slugManuallySet: boolean;
   randomSuffix: string;
   isLoading: boolean;
+  emailValidation: {
+    isValid: boolean;
+    validEmails: string[];
+    invalidEmails: string[];
+  };
 };
 
 type Actions = {
@@ -37,6 +75,7 @@ const useOnboardingStore = create<OnboardingStoreState & Actions>(
       slugManuallySet: false,
       randomSuffix,
       isLoading: false,
+      emailValidation: { isValid: true, validEmails: [], invalidEmails: [] },
       setStage: (stage) => set({ stage }),
       setName: (name) => set({ name }),
       setOrgName: (orgName) => {
@@ -56,7 +95,10 @@ const useOnboardingStore = create<OnboardingStoreState & Actions>(
         set({ orgSlug, slugManuallySet: true });
       },
       setOrgId: (orgId) => set({ orgId }),
-      setTeamEmailsList: (teamEmailsList) => set({ teamEmailsList }),
+      setTeamEmailsList: (teamEmailsList) => {
+        const emailValidation = validateEmails(teamEmailsList);
+        set({ teamEmailsList, emailValidation });
+      },
       setSlugManuallySet: (slugManuallySet) => set({ slugManuallySet }),
       setIsLoading: (isLoading) => set({ isLoading }),
     };

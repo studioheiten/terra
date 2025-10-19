@@ -112,7 +112,6 @@ html {
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
@@ -148,7 +147,7 @@ html {
   --secondary-foreground: var(--color-label-primary);
   --muted: var(--color-fill-secondary);
   --muted-foreground: var(--color-label-secondary);
-  --accent: var(--color-fill-primary);
+  --accent: var(--color-accent);
   --accent-foreground: var(--color-label-primary);
   --destructive: var(--color-red);
   --border: var(--color-separator-opaque);
@@ -183,7 +182,7 @@ html {
   --secondary-foreground: var(--color-label-primary);
   --muted: var(--color-fill-tertiary);
   --muted-foreground: var(--color-label-secondary);
-  --accent: var(--color-fill-primary);
+  --accent: var(--color-accent);
   --accent-foreground: var(--color-label-primary);
   --destructive: var(--color-red);
   --border: var(--color-separator-opaque);

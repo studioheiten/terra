@@ -4,6 +4,7 @@ import { Organization } from "@prisma/client";
 import { withAuth } from "@workos-inc/authkit-nextjs";
 import OnboardingView from "./view";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export type PageProps = {
   name: string | null;
@@ -11,7 +12,11 @@ export type PageProps = {
 };
 
 export default async function OnboardingPage() {
-  const { user: _ } = await withAuth({ ensureSignedIn: true });
+  const { user: _, organizationId } = await withAuth({ ensureSignedIn: true });
+
+  if (organizationId) {
+    redirect(`/${organizationId}`);
+  }
 
   return (
     <div className="w-full h-screen flex flex-row gap-0 items-stretch justify-center bg-bg-primary">
