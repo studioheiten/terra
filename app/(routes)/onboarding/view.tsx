@@ -1,24 +1,29 @@
 "use client";
 
-import { useMemo } from "react";
-import { Button } from "@/components/primitives/Button";
+import clsx from "clsx";
 import useOnboardingStore from "./store";
 import OnboardingProgressView from "./components/ProgressView";
 import TextField from "@/components/primitives/TextField";
+import { useMemo } from "react";
+import { Button } from "@/components/primitives/Button";
 import { ProgressView } from "@/components/misc/ProgressView";
-import { checkOrgSlugExists, reauthenticateUser } from "./lib";
+import {
+  checkOrgSlugExists,
+  reauthenticateUser,
+  setNameAndCreateUser,
+} from "./lib";
 import { toast } from "sonner";
-import clsx from "clsx";
 import { createOrganization } from "@/lib/org/create-org";
 import { inviteEmailsToOrganization } from "@/lib/org/invite-to-org";
-import { redirect } from "next/navigation";
 
 export default function OnboardingView() {
   const {
     stage,
     setStage,
-    name,
-    setName,
+    firstName,
+    lastName,
+    setFirstName,
+    setLastName,
     orgName,
     orgSlug,
     orgId,
@@ -34,11 +39,11 @@ export default function OnboardingView() {
       case "NAME":
         return "Welcome to Terra.";
       case "CREATE_ORG":
-        return `Hi there, ${name}!`;
+        return `Hi there, ${firstName}!`;
       case "INVITE_TEAM":
         return "Bring the rest of the team";
     }
-  }, [stage]);
+  }, [stage, firstName]);
 
   const subheadline = useMemo(() => {
     switch (stage) {
@@ -63,7 +68,9 @@ export default function OnboardingView() {
       case "NAME":
         // Alphanumerics and spaces only
         const nameRegex = /^[a-zA-Z0-9\s]+$/;
-        return nameRegex.test(name.trim());
+        return (
+          nameRegex.test(firstName.trim()) && nameRegex.test(lastName.trim())
+        );
       case "CREATE_ORG":
         // Org name: alphanumerics and spaces only, max 32 chars
         const orgNameRegex = /^[a-zA-Z0-9\s]+$/;
@@ -87,17 +94,34 @@ export default function OnboardingView() {
       default:
         return false;
     }
-  }, [stage, name, orgName, orgSlug, slugManuallySet, emailValidation]);
+  }, [
+    stage,
+    firstName,
+    lastName,
+    orgName,
+    orgSlug,
+    slugManuallySet,
+    emailValidation,
+  ]);
 
   const onClick = async () => {
     if (!buttonEnabled || isLoading) return;
 
+    // In the NAME stage, set the user's name and move to CREATE_ORG
     if (stage == "NAME") {
-      setName(name.trim());
+      const fnameTrimmed = firstName.trim();
+      const lnameTrimmed = lastName.trim();
+
+      setFirstName(fnameTrimmed);
+      setLastName(lnameTrimmed);
+
+      await setNameAndCreateUser(fnameTrimmed, lnameTrimmed);
+
       setStage("CREATE_ORG");
       return;
     }
 
+    // In the CREATE_ORG stage, create the organization and move to INVITE_TEAM
     if (stage === "CREATE_ORG") {
       setIsLoading(true);
 
@@ -168,15 +192,24 @@ export default function OnboardingView() {
 }
 
 function NameInput() {
-  const { name, setName } = useOnboardingStore();
+  const { firstName, lastName, setFirstName, setLastName } =
+    useOnboardingStore();
 
   return (
-    <TextField
-      value={name}
-      onChange={setName}
-      placeholder="Jeff Winger"
-      title="What's your name?"
-    />
+    <div className="flex flex-col gap-4">
+      <TextField
+        value={firstName}
+        onChange={setFirstName}
+        placeholder="Jeff"
+        title="First Name"
+      />
+      <TextField
+        value={lastName}
+        onChange={setLastName}
+        placeholder="Winger"
+        title="Last Name"
+      />
+    </div>
   );
 }
 

@@ -2,6 +2,7 @@
 
 import workos from "@/lib/workos";
 import prisma from "@/packages/prisma";
+import { withAuth } from "@workos-inc/authkit-nextjs";
 import { cookies } from "next/headers";
 
 export async function checkOrgSlugExists(slug: string): Promise<boolean> {
@@ -50,8 +51,30 @@ export async function reauthenticateUser() {
   }
 }
 
-export async function setNameAndCreateUser(name: string) {
+export async function setNameAndCreateUser(
+  firstName: string,
+  lastName: string
+) {
   try {
+    const { user } = await withAuth();
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    await workos.userManagement.updateUser({
+      userId: user.id,
+      firstName,
+      lastName,
+    });
+
+    await prisma.user.create({
+      data: {
+        id: user.id,
+        firstName,
+        lastName,
+        email: user.email,
+      },
+    });
   } catch (err) {
     console.error("Error setting user name:", err);
     throw err;

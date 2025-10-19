@@ -35,7 +35,8 @@ function validateEmails(emailsString: string): {
 
 type OnboardingStoreState = {
   stage: "NAME" | "CREATE_ORG" | "INVITE_TEAM";
-  name: string;
+  firstName: string;
+  lastName: string;
   orgName: string;
   orgSlug: string;
   orgId: string;
@@ -52,7 +53,8 @@ type OnboardingStoreState = {
 
 type Actions = {
   setStage: (stage: OnboardingStoreState["stage"]) => void;
-  setName: (name: string) => void;
+  setFirstName: (firstName: string) => void;
+  setLastName: (lastName: string) => void;
   setOrgName: (orgName: string) => void;
   setOrgSlug: (orgSlug: string) => void;
   setOrgId: (orgId: string) => void;
@@ -67,7 +69,8 @@ const useOnboardingStore = create<OnboardingStoreState & Actions>(
 
     return {
       stage: "NAME",
-      name: "",
+      firstName: "",
+      lastName: "",
       orgName: "",
       orgSlug: "",
       orgId: "",
@@ -77,7 +80,8 @@ const useOnboardingStore = create<OnboardingStoreState & Actions>(
       isLoading: false,
       emailValidation: { isValid: true, validEmails: [], invalidEmails: [] },
       setStage: (stage) => set({ stage }),
-      setName: (name) => set({ name }),
+      setFirstName: (firstName) => set({ firstName }),
+      setLastName: (lastName) => set({ lastName }),
       setOrgName: (orgName) => {
         set({ orgName });
         // Auto-generate slug if not manually set

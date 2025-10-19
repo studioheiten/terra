@@ -15,10 +15,11 @@ datasource db {
 }
 
 model User {
-  id       String   @id
-  name     String
-  email    String   @unique
-  joinedAt DateTime @default(now())
+  id        String   @id
+  firstName String
+  lastName  String
+  email     String   @unique
+  joinedAt  DateTime @default(now())
 }
 
 enum OrganizationTier {

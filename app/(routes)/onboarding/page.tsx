@@ -14,6 +14,7 @@ export type PageProps = {
 export default async function OnboardingPage() {
   const { user: _, organizationId } = await withAuth({ ensureSignedIn: true });
 
+  // If the user already has an organization, redirect them to it directly
   if (organizationId) {
     redirect(`/${organizationId}`);
   }
