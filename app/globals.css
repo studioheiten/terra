@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 html {
   background-color: var(--color-bg-primary);
@@ -89,5 +92,123 @@ html {
       --color-separator-opaque: #38383a;
       --color-separator-non-opaque: rgba(255, 255, 255, 0.17);
     }
+  }
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  /* Map existing color variables to shadcn/ui variables */
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-label-primary);
+  --card: var(--color-bg-primary);
+  --card-foreground: var(--color-label-primary);
+  --popover: var(--color-bg-primary);
+  --popover-foreground: var(--color-label-primary);
+  --primary: var(--color-accent);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-bg-secondary);
+  --secondary-foreground: var(--color-label-primary);
+  --muted: var(--color-fill-secondary);
+  --muted-foreground: var(--color-label-secondary);
+  --accent: var(--color-fill-primary);
+  --accent-foreground: var(--color-label-primary);
+  --destructive: var(--color-red);
+  --border: var(--color-separator-opaque);
+  --input: var(--color-separator-non-opaque);
+  --ring: var(--color-blue);
+  --chart-1: var(--color-blue);
+  --chart-2: var(--color-green);
+  --chart-3: var(--color-orange);
+  --chart-4: var(--color-pink);
+  --chart-5: var(--color-purple);
+  --sidebar: var(--color-bg-secondary);
+  --sidebar-foreground: var(--color-label-primary);
+  --sidebar-primary: var(--color-accent);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--color-fill-primary);
+  --sidebar-accent-foreground: var(--color-label-primary);
+  --sidebar-border: var(--color-separator-opaque);
+  --sidebar-ring: var(--color-blue);
+}
+
+.dark {
+  /* Map existing dark mode color variables to shadcn/ui variables */
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-label-primary);
+  --card: var(--color-bg-secondary);
+  --card-foreground: var(--color-label-primary);
+  --popover: var(--color-bg-secondary);
+  --popover-foreground: var(--color-label-primary);
+  --primary: var(--color-accent);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-fill-secondary);
+  --secondary-foreground: var(--color-label-primary);
+  --muted: var(--color-fill-tertiary);
+  --muted-foreground: var(--color-label-secondary);
+  --accent: var(--color-fill-primary);
+  --accent-foreground: var(--color-label-primary);
+  --destructive: var(--color-red);
+  --border: var(--color-separator-opaque);
+  --input: var(--color-separator-non-opaque);
+  --ring: var(--color-blue);
+  --chart-1: var(--color-blue);
+  --chart-2: var(--color-green);
+  --chart-3: var(--color-orange);
+  --chart-4: var(--color-pink);
+  --chart-5: var(--color-purple);
+  --sidebar: var(--color-bg-secondary);
+  --sidebar-foreground: var(--color-label-primary);
+  --sidebar-primary: var(--color-accent);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--color-fill-primary);
+  --sidebar-accent-foreground: var(--color-label-primary);
+  --sidebar-border: var(--color-separator-opaque);
+  --sidebar-ring: var(--color-blue);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

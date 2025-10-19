@@ -1,11 +1,11 @@
 "use client";
 
-import { use, useMemo } from "react";
-import { Button } from "@/app/components/primitives/Button";
+import { useMemo } from "react";
+import { Button } from "@/components/primitives/Button";
 import useOnboardingStore from "./store";
 import OnboardingProgressView from "./components/ProgressView";
-import TextField from "@/app/components/primitives/TextField";
-import { ProgressView } from "@/app/components/misc/ProgressView";
+import TextField from "@/components/primitives/TextField";
+import { ProgressView } from "@/components/misc/ProgressView";
 import { checkOrgSlugExists } from "./lib";
 
 export default function OnboardingView() {
