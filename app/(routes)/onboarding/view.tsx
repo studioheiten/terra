@@ -1,13 +1,25 @@
 "use client";
 
-import { useMemo } from "react";
+import { use, useMemo } from "react";
 import { Button } from "@/app/components/primitives/Button";
 import useOnboardingStore from "./store";
 import OnboardingProgressView from "./components/ProgressView";
 import TextField from "@/app/components/primitives/TextField";
+import { ProgressView } from "@/app/components/misc/ProgressView";
+import { checkOrgSlugExists } from "./lib";
 
 export default function OnboardingView() {
-  const { stage, setStage, name, orgName, orgSlug, slugManuallySet } = useOnboardingStore();
+  const {
+    stage,
+    setStage,
+    name,
+    setName,
+    orgName,
+    orgSlug,
+    slugManuallySet,
+    isLoading,
+    setIsLoading,
+  } = useOnboardingStore();
 
   const title = useMemo(() => {
     switch (stage) {
@@ -31,6 +43,13 @@ export default function OnboardingView() {
     }
   }, [stage]);
 
+  const buttonText = useMemo(() => {
+    if (stage === "INVITE_TEAM") {
+      return "Finish ";
+    }
+    return "Next";
+  }, [stage]);
+
   const buttonEnabled = useMemo(() => {
     switch (stage) {
       case "NAME":
@@ -40,12 +59,18 @@ export default function OnboardingView() {
       case "CREATE_ORG":
         // Org name: alphanumerics and spaces only, max 32 chars
         const orgNameRegex = /^[a-zA-Z0-9\s]+$/;
-        const orgNameValid = orgNameRegex.test(orgName.trim()) && orgName.trim().length <= 32 && orgName.trim().length > 0;
+        const orgNameValid =
+          orgNameRegex.test(orgName.trim()) &&
+          orgName.trim().length <= 32 &&
+          orgName.trim().length > 0;
 
         // Org slug: lowercase alphanumerics and hyphens only, no spaces
         const orgSlugRegex = /^[a-z0-9-]+$/;
         const slugMaxLength = slugManuallySet ? 32 : 37;
-        const orgSlugValid = orgSlugRegex.test(orgSlug.trim()) && orgSlug.trim().length > 0 && orgSlug.trim().length <= slugMaxLength;
+        const orgSlugValid =
+          orgSlugRegex.test(orgSlug.trim()) &&
+          orgSlug.trim().length > 0 &&
+          orgSlug.trim().length <= slugMaxLength;
 
         return orgNameValid && orgSlugValid;
       default:
@@ -57,8 +82,14 @@ export default function OnboardingView() {
     if (!buttonEnabled) return;
 
     if (stage == "NAME") {
+      setName(name.trim());
       setStage("CREATE_ORG");
       return;
+    }
+
+    if (stage === "CREATE_ORG") {
+      // Check if the slug is already taken
+      const slugTaken = await checkOrgSlugExists(orgSlug.trim());
     }
   };
 
@@ -81,7 +112,7 @@ export default function OnboardingView() {
         {stage === "INVITE_TEAM" && <InviteTeam />}
 
         <Button onClick={onClick} disabled={!buttonEnabled}>
-          Next
+          {isLoading ? <ProgressView /> : buttonText}
         </Button>
       </div>
     </div>
